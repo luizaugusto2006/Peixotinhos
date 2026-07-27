@@ -2,6 +2,8 @@ import os
 
 BASE_DIR = os.path.abspath(os.path.dirname(__file__))
 
+os.makedirs(os.path.join(BASE_DIR, "instance"), exist_ok=True)
+
 
 class Config:
     SECRET_KEY = os.environ.get("SECRET_KEY", "peixotinhos-dev-key-change-in-production")
