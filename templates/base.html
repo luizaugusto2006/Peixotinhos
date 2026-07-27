@@ -41,13 +41,10 @@
                 {% else %}
                     <a href="{{ url_for('login') }}" class="btn-nav btn-login">Admin</a>
                 {% endif %}
-                <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" title="Modo escuro">
-                    <span id="darkIcon">&#9789;</span>
-                </button>
             </div>
             <div style="display:flex;align-items:center;gap:12px;">
-                <button class="dark-toggle" id="darkToggleMobile" onclick="toggleDark()" title="Modo escuro">
-                    <span id="darkIconMobile">&#9789;</span>
+                <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" title="Modo escuro">
+                    <span id="darkIcon">&#9789;</span>
                 </button>
                 <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">
                     Menu
@@ -96,9 +93,7 @@
             var isDark = document.body.classList.contains('dark-mode');
             var icon = isDark ? '&#9788;' : '&#9789;';
             var el1 = document.getElementById('darkIcon');
-            var el2 = document.getElementById('darkIconMobile');
             if (el1) el1.innerHTML = icon;
-            if (el2) el2.innerHTML = icon;
         }
 
         if (localStorage.getItem('darkMode') === 'true') {
