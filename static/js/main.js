@@ -89,6 +89,22 @@ document.addEventListener('DOMContentLoaded', function () {
         });
     });
 
+    // ── Scroll reveal animation ──────────────────────────
+    var revealElements = document.querySelectorAll('.scroll-reveal');
+    if (revealElements.length > 0 && 'IntersectionObserver' in window) {
+        var observer = new IntersectionObserver(function (entries) {
+            entries.forEach(function (entry) {
+                if (entry.isIntersecting) {
+                    entry.target.classList.add('revealed');
+                    observer.unobserve(entry.target);
+                }
+            });
+        }, { threshold: 0.1 });
+        revealElements.forEach(function (el) { observer.observe(el); });
+    } else {
+        revealElements.forEach(function (el) { el.classList.add('revealed'); });
+    }
+
     // ── Scroll to #eventos ────────────────────────────────
     if (window.location.hash === '#eventos') {
         var target = document.getElementById('eventos');
