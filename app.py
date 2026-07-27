@@ -19,7 +19,7 @@ from flask_login import (
 )
 from werkzeug.utils import secure_filename
 from config import Config
-from models import db, Admin, Event, Photo
+from models import db, Admin, Event, Photo, AboutTopic
 
 
 def create_app():
@@ -66,7 +66,8 @@ def create_app():
 
     @app.route("/sobre")
     def about():
-        return render_template("about.html")
+        topics = AboutTopic.query.order_by(AboutTopic.order, AboutTopic.id).all()
+        return render_template("about.html", topics=topics)
 
     @app.route("/evento/<int:event_id>")
     def event_detail(event_id):
@@ -318,6 +319,56 @@ def create_app():
         db.session.commit()
         flash(f"Senha de '{user.username}' alterada com sucesso!", "success")
         return redirect(url_for("admin_users"))
+
+    # ── About topics management ────────────────────────────────
+
+    @app.route("/admin/sobre")
+    @admin_required
+    def admin_about():
+        topics = AboutTopic.query.order_by(AboutTopic.order, AboutTopic.id).all()
+        return render_template("admin/about_topics.html", topics=topics)
+
+    @app.route("/admin/sobre/novo", methods=["GET", "POST"])
+    @admin_required
+    def admin_about_new():
+        if request.method == "POST":
+            title = request.form.get("title", "").strip()
+            content = request.form.get("content", "").strip()
+            order = request.form.get("order", 0, type=int)
+            if not title or not content:
+                flash("Título e conteúdo são obrigatórios.", "danger")
+                return render_template("admin/about_form.html", topic=None)
+            topic = AboutTopic(title=title, content=content, order=order)
+            db.session.add(topic)
+            db.session.commit()
+            flash("Tópico criado com sucesso!", "success")
+            return redirect(url_for("admin_about"))
+        return render_template("admin/about_form.html", topic=None)
+
+    @app.route("/admin/sobre/<int:topic_id>/editar", methods=["GET", "POST"])
+    @admin_required
+    def admin_about_edit(topic_id):
+        topic = AboutTopic.query.get_or_404(topic_id)
+        if request.method == "POST":
+            topic.title = request.form.get("title", "").strip()
+            topic.content = request.form.get("content", "").strip()
+            topic.order = request.form.get("order", 0, type=int)
+            if not topic.title or not topic.content:
+                flash("Título e conteúdo são obrigatórios.", "danger")
+                return render_template("admin/about_form.html", topic=topic)
+            db.session.commit()
+            flash("Tópico atualizado com sucesso!", "success")
+            return redirect(url_for("admin_about"))
+        return render_template("admin/about_form.html", topic=topic)
+
+    @app.route("/admin/sobre/<int:topic_id>/excluir", methods=["POST"])
+    @admin_required
+    def admin_about_delete(topic_id):
+        topic = AboutTopic.query.get_or_404(topic_id)
+        db.session.delete(topic)
+        db.session.commit()
+        flash("Tópico excluído.", "info")
+        return redirect(url_for("admin_about"))
 
     # ── Create tables ──────────────────────────────────────────
 

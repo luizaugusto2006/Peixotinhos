@@ -6,9 +6,14 @@
     <div class="container">
         <div class="admin-header">
             <h1>Painel de Controle</h1>
-            <a href="{{ url_for('admin_event_new') }}" class="btn btn-primary">
-                Novo Evento
-            </a>
+            <div style="display:flex;gap:8px;">
+                <a href="{{ url_for('admin_about') }}" class="btn btn-secondary">
+                    Sobre
+                </a>
+                <a href="{{ url_for('admin_event_new') }}" class="btn btn-primary">
+                    Novo Evento
+                </a>
+            </div>
         </div>
 
         <div class="stats-grid">

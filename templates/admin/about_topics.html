@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Gerenciar Sobre{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <a href="{{ url_for('admin_dashboard') }}" class="back-link">
+            Voltar ao Painel
+        </a>
+
+        <div class="admin-header">
+            <h1>Gerenciar Página Sobre</h1>
+            <a href="{{ url_for('admin_about_new') }}" class="btn btn-primary">
+                Novo Tópico
+            </a>
+        </div>
+
+        {% if topics %}
+            <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Ordem</th>
+                            <th>Título</th>
+                            <th>Conteúdo</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for topic in topics %}
+                            <tr>
+                                <td>{{ topic.order }}</td>
+                                <td class="td-title">{{ topic.title }}</td>
+                                <td style="max-width:400px;">{{ topic.content[:120] }}{% if topic.content|length > 120 %}...{% endif %}</td>
+                                <td class="td-actions">
+                                    <a href="{{ url_for('admin_about_edit', topic_id=topic.id) }}" class="btn btn-sm btn-info">
+                                        Editar
+                                    </a>
+                                    <form method="POST" action="{{ url_for('admin_about_delete', topic_id=topic.id) }}"
+                                          class="inline-form"
+                                          onsubmit="return confirm('Excluir este tópico?')">
+                                        <button type="submit" class="btn btn-sm btn-danger">
+                                            Excluir
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h3>Nenhum tópico criado</h3>
+                <p>Comece adicionando o primeiro tópico da página Sobre.</p>
+                <a href="{{ url_for('admin_about_new') }}" class="btn btn-primary">
+                    Criar Tópico
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

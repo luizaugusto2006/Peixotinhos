@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar' if topic else 'Novo' }} Tópico{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container container-sm">
+        <a href="{{ url_for('admin_about') }}" class="back-link">
+            Voltar
+        </a>
+
+        <div class="form-card">
+            <h2>{{ 'Editar Tópico' if topic else 'Novo Tópico' }}</h2>
+
+            <form method="POST" class="admin-form">
+                <div class="form-group">
+                    <label for="title">Título do Tópico *</label>
+                    <input type="text" id="title" name="title" required
+                           value="{{ topic.title if topic else '' }}"
+                           placeholder="Ex: Um pouco da nossa história">
+                </div>
+
+                <div class="form-group">
+                    <label for="content">Conteúdo *</label>
+                    <textarea id="content" name="content" rows="10"
+                              placeholder="Escreva o conteúdo do tópico aqui...">{{ topic.content if topic else '' }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="order">Ordem de exibição</label>
+                    <input type="number" id="order" name="order"
+                           value="{{ topic.order if topic else 0 }}" min="0">
+                    <small style="color:var(--gray-500);">Menor número aparece primeiro</small>
+                </div>
+
+                <div class="form-actions">
+                    <a href="{{ url_for('admin_about') }}" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">
+                        {{ 'Salvar Alterações' if topic else 'Criar Tópico' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}
