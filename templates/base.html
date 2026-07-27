@@ -4,6 +4,21 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Peixotinhos{% endblock %} | Colégio Afrânio Peixoto</title>
+
+    <meta name="description" content="Galeria de fotos dos eventos do Colégio Afrânio Peixoto">
+    <meta name="author" content="Pintinho">
+
+    <meta property="og:title" content="Peixotinhos - Colégio Afrânio Peixoto">
+    <meta property="og:description" content="Galeria de fotos dos eventos do Colégio Afrânio Peixoto">
+    <meta property="og:type" content="website">
+    <meta property="og:image" content="{{ url_for('static', filename='uploads/fachada_com_sr_rui.jpg', _external=True) }}">
+
+    <meta name="twitter:card" content="summary_large_image">
+    <meta name="twitter:title" content="Peixotinhos - Colégio Afrânio Peixoto">
+    <meta name="twitter:description" content="Galeria de fotos dos eventos do Colégio Afrânio Peixoto">
+    <meta name="twitter:image" content="{{ url_for('static', filename='uploads/fachada_com_sr_rui.jpg', _external=True) }}">
+
+    <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐟</text></svg>">
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
@@ -55,6 +70,8 @@
             <p class="footer-sub">Site desenvolvido por Pintinho</p>
         </div>
     </footer>
+
+    <button class="back-to-top" id="backToTop" title="Voltar ao topo">&#8593;</button>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
     {% block scripts %}{% endblock %}

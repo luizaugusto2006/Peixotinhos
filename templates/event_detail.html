@@ -18,6 +18,15 @@
             {% endif %}
         </div>
 
+        <div class="share-section">
+            <p>Compartilhe este evento</p>
+            <a href="https://wa.me/?text={{ 'Confira as fotos do evento: ' + event.title + ' - ' + url_for('event_detail', event_id=event.id, _external=True) }}"
+               target="_blank"
+               class="btn btn-whatsapp">
+                Compartilhar no WhatsApp
+            </a>
+        </div>
+
         {% if photos %}
             <div class="gallery-grid" id="gallery">
                 {% for photo in photos %}
