@@ -1,13 +1,12 @@
 import os
-from app import app
+import sys
 
-# PythonAnywhere WSGI configuration
-# Copie este conteúdo para o seu arquivo WSGI no PythonAnywhere:
-# /var/www/luizaugusto2006_pythonanywhere_com_wsgi.py
+# Configurar variáveis de ambiente ANTES de importar o app
+os.environ["SECRET_KEY"] = "peixotinhos-prod-chave-segura-2026"
 
-# Adicione o diretório do projeto ao sys.path
-PROJECT_DIR = os.path.dirname(os.path.abspath(__file__))
-if PROJECT_DIR not in __import__("sys").path:
-    __import__("sys").path.insert(0, PROJECT_DIR)
+# Diretório do projeto
+PROJECT_DIR = "/home/peixotinhos/Peixotinhos"
+if PROJECT_DIR not in sys.path:
+    sys.path.insert(0, PROJECT_DIR)
 
-application = app
+from app import app as application
