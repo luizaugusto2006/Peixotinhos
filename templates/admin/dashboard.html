@@ -1,0 +1,85 @@
+{% extends "base.html" %}
+{% block title %}Painel Admin{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <div class="admin-header">
+            <h1>Painel de Controle</h1>
+            <a href="{{ url_for('admin_event_new') }}" class="btn btn-primary">
+                Novo Evento
+            </a>
+        </div>
+
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-number">{{ events|length }}</span>
+                    <span class="stat-label">Eventos</span>
+                </div>
+            </div>
+            <div class="stat-card">
+                <div class="stat-info">
+                    <span class="stat-number">{{ total_photos }}</span>
+                    <span class="stat-label">Fotos</span>
+                </div>
+            </div>
+        </div>
+
+        {% if events %}
+            <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>Evento</th>
+                            <th>Data</th>
+                            <th>Fotos</th>
+                            <th>Status</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for event in events %}
+                            <tr>
+                                <td class="td-title">{{ event.title }}</td>
+                                <td>{{ event.date.strftime('%d/%m/%Y') }}</td>
+                                <td>{{ event.photo_count }}</td>
+                                <td>
+                                    {% if event.is_published %}
+                                        <span class="badge badge-success">Publicado</span>
+                                    {% else %}
+                                        <span class="badge badge-warning">Rascunho</span>
+                                    {% endif %}
+                                </td>
+                                <td class="td-actions">
+                                    <a href="{{ url_for('admin_event_photos', event_id=event.id) }}" class="btn btn-sm btn-info" title="Gerenciar fotos">
+                                        Fotos
+                                    </a>
+                                    <a href="{{ url_for('admin_event_edit', event_id=event.id) }}" class="btn btn-sm btn-secondary" title="Editar">
+                                        Editar
+                                    </a>
+                                    <form method="POST" action="{{ url_for('admin_event_delete', event_id=event.id) }}"
+                                          class="inline-form"
+                                          onsubmit="return confirm('Excluir este evento e todas as fotos?')">
+                                        <button type="submit" class="btn btn-sm btn-danger" title="Excluir">
+                                            Excluir
+                                        </button>
+                                    </form>
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h3>Nenhum evento criado</h3>
+                <p>Comece criando seu primeiro evento!</p>
+                <a href="{{ url_for('admin_event_new') }}" class="btn btn-primary">
+                    Criar Evento
+                </a>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

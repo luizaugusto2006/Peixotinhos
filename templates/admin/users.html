@@ -1,0 +1,62 @@
+{% extends "base.html" %}
+{% block title %}Administradores{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <a href="{{ url_for('admin_dashboard') }}" class="back-link">
+            Voltar ao Painel
+        </a>
+
+        <div class="admin-header">
+            <h1>Administradores</h1>
+            <a href="{{ url_for('admin_user_new') }}" class="btn btn-primary">
+                Novo Administrador
+            </a>
+        </div>
+
+        {% if users %}
+            <div class="admin-table-wrapper">
+                <table class="admin-table">
+                    <thead>
+                        <tr>
+                            <th>ID</th>
+                            <th>Usuário</th>
+                            <th>Criado em</th>
+                            <th>Ações</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for user in users %}
+                            <tr>
+                                <td>{{ user.id }}</td>
+                                <td class="td-title">{{ user.username }}</td>
+                                <td>{{ user.created_at.strftime('%d/%m/%Y') if user.created_at else '-' }}</td>
+                                <td class="td-actions">
+                                    <form method="POST" action="{{ url_for('admin_user_password', user_id=user.id) }}"
+                                          class="inline-form password-form" style="display:flex;gap:6px;align-items:center;">
+                                        <input type="password" name="password" placeholder="Nova senha"
+                                               style="padding:6px 10px;border:1px solid #dee2e6;border-radius:6px;font-size:0.85rem;width:160px;">
+                                        <button type="submit" class="btn btn-sm btn-info">Alterar Senha</button>
+                                    </form>
+                                    {% if user.id != current_user.id %}
+                                        <form method="POST" action="{{ url_for('admin_user_delete', user_id=user.id) }}"
+                                              class="inline-form"
+                                              onsubmit="return confirm('Excluir este administrador?')">
+                                            <button type="submit" class="btn btn-sm btn-danger">Excluir</button>
+                                        </form>
+                                    {% endif %}
+                                </td>
+                            </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h3>Nenhum administrador encontrado</h3>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}

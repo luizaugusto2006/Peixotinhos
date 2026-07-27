@@ -1,0 +1,65 @@
+{% extends "base.html" %}
+{% block title %}{{ 'Editar' if event else 'Novo' }} Evento{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container container-sm">
+        <a href="{{ url_for('admin_dashboard') }}" class="back-link">
+            Voltar ao Painel
+        </a>
+
+        <div class="form-card">
+            <h2>
+                {{ 'Editar Evento' if event else 'Novo Evento' }}
+            </h2>
+
+            <form method="POST" enctype="multipart/form-data" class="admin-form">
+                <div class="form-group">
+                    <label for="title">Título do Evento *</label>
+                    <input type="text" id="title" name="title" required
+                           value="{{ event.title if event else '' }}"
+                           placeholder="Ex: Festa Junina 2025">
+                </div>
+
+                <div class="form-group">
+                    <label for="description">Descrição</label>
+                    <textarea id="description" name="description" rows="3"
+                              placeholder="Descrição do evento...">{{ event.description if event else '' }}</textarea>
+                </div>
+
+                <div class="form-group">
+                    <label for="date">Data do Evento *</label>
+                    <input type="date" id="date" name="date" required
+                           value="{{ event.date.strftime('%Y-%m-%d') if event else '' }}">
+                </div>
+
+                <div class="form-group">
+                    <label for="cover">Foto de Capa</label>
+                    <input type="file" id="cover" name="cover" accept="image/*">
+                    {% if event and event.cover_photo %}
+                        <div class="current-cover">
+                            <img src="{{ url_for('static', filename='uploads/' + event.cover_photo) }}" alt="Capa atual">
+                            <small>Capa atual</small>
+                        </div>
+                    {% endif %}
+                </div>
+
+                <div class="form-group">
+                    <label class="checkbox-label">
+                        <input type="checkbox" name="is_published"
+                               {{ 'checked' if not event or event.is_published else '' }}>
+                        Publicar evento (visível no site)
+                    </label>
+                </div>
+
+                <div class="form-actions">
+                    <a href="{{ url_for('admin_dashboard') }}" class="btn btn-secondary">Cancelar</a>
+                    <button type="submit" class="btn btn-primary">
+                        {{ 'Salvar Alterações' if event else 'Criar Evento' }}
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+</section>
+{% endblock %}

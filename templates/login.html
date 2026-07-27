@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Login Admin{% endblock %}
+
+{% block content %}
+<section class="auth-section">
+        <div class="auth-card">
+            <div class="auth-header">
+                <div class="auth-icon">PA</div>
+                <h2>Colégio Afrânio Peixoto</h2>
+            </div>
+            <form method="POST" class="auth-form">
+            <div class="form-group">
+                <label for="username">Usuário</label>
+                <input type="text" id="username" name="username" required autofocus>
+            </div>
+            <div class="form-group">
+                <label for="password">Senha</label>
+                <input type="password" id="password" name="password" required>
+            </div>
+            <button type="submit" class="btn btn-primary btn-full">
+                Entrar
+            </button>
+        </form>
+    </div>
+</section>
+{% endblock %}

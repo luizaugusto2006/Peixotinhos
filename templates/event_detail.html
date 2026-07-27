@@ -1,0 +1,95 @@
+{% extends "base.html" %}
+{% block title %}{{ event.title }}{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <a href="{{ url_for('index') }}" class="back-link">
+            Voltar
+        </a>
+
+        <div class="event-header">
+            <h1>{{ event.title }}</h1>
+            <p class="event-date-detail">
+                {{ event.date.strftime('%d/%m/%Y') }}
+            </p>
+            {% if event.description %}
+                <p class="event-description">{{ event.description }}</p>
+            {% endif %}
+        </div>
+
+        {% if photos %}
+            <div class="gallery-grid" id="gallery">
+                {% for photo in photos %}
+                    <div class="gallery-item" onclick="openLightbox({{ loop.index0 }})">
+                        <img src="{{ url_for('static', filename='uploads/' + photo.filename) }}"
+                             alt="{{ photo.caption or event.title }}"
+                             loading="lazy">
+                        {% if photo.caption %}
+                            <div class="gallery-caption">{{ photo.caption }}</div>
+                        {% endif %}
+                    </div>
+                {% endfor %}
+            </div>
+
+            <div class="lightbox" id="lightbox" onclick="closeLightbox(event)">
+                <button class="lightbox-close" onclick="closeLightbox()">&times;</button>
+                <button class="lightbox-prev" onclick="navigateLightbox(-1)">&lsaquo;</button>
+                <button class="lightbox-next" onclick="navigateLightbox(1)">&rsaquo;</button>
+                <div class="lightbox-content">
+                    <img id="lightbox-img" src="" alt="">
+                    <p id="lightbox-caption" class="lightbox-caption"></p>
+                </div>
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h3>Nenhuma foto neste evento</h3>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+    const photos = [
+        {% for photo in photos %}
+            {
+                src: "{{ url_for('static', filename='uploads/' + photo.filename) }}",
+                caption: "{{ photo.caption | e }}"
+            }{% if not loop.last %},{% endif %}
+        {% endfor %}
+    ];
+    let currentIndex = 0;
+
+    function openLightbox(index) {
+        currentIndex = index;
+        updateLightbox();
+        document.getElementById('lightbox').classList.add('open');
+        document.body.style.overflow = 'hidden';
+    }
+
+    function closeLightbox(e) {
+        if (e && e.target !== e.currentTarget && !e.target.classList.contains('lightbox-close')) return;
+        document.getElementById('lightbox').classList.remove('open');
+        document.body.style.overflow = '';
+    }
+
+    function navigateLightbox(dir) {
+        currentIndex = (currentIndex + dir + photos.length) % photos.length;
+        updateLightbox();
+    }
+
+    function updateLightbox() {
+        document.getElementById('lightbox-img').src = photos[currentIndex].src;
+        document.getElementById('lightbox-caption').textContent = photos[currentIndex].caption;
+    }
+
+    document.addEventListener('keydown', function(e) {
+        if (!document.getElementById('lightbox').classList.contains('open')) return;
+        if (e.key === 'Escape') closeLightbox();
+        if (e.key === 'ArrowLeft') navigateLightbox(-1);
+        if (e.key === 'ArrowRight') navigateLightbox(1);
+    });
+</script>
+{% endblock %}

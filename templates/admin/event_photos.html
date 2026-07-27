@@ -1,0 +1,71 @@
+{% extends "base.html" %}
+{% block title %}Fotos - {{ event.title }}{% endblock %}
+
+{% block content %}
+<section class="section">
+    <div class="container">
+        <a href="{{ url_for('admin_dashboard') }}" class="back-link">
+            Voltar ao Painel
+        </a>
+
+        <div class="admin-header">
+            <h1>{{ event.title }}</h1>
+            <a href="{{ url_for('event_detail', event_id=event.id) }}" class="btn btn-secondary" target="_blank">
+                Ver no Site
+            </a>
+        </div>
+
+        <div class="form-card upload-card">
+            <h2>Adicionar Fotos</h2>
+            <form method="POST" enctype="multipart/form-data" class="admin-form" id="upload-form">
+                <div class="form-group">
+                    <label for="photos">Selecione as fotos (pode selecionar várias)</label>
+                    <input type="file" id="photos" name="photos" accept="image/*" multiple required>
+                </div>
+                <div class="form-group">
+                    <label for="caption">Legenda (opcional - aplica a todas as fotos selecionadas)</label>
+                    <input type="text" id="caption" name="caption" placeholder="Ex: Momento especial">
+                </div>
+                <button type="submit" class="btn btn-primary">
+                    Enviar Fotos
+                </button>
+            </form>
+        </div>
+
+        {% if photos %}
+            <div class="admin-photos-grid">
+                {% for photo in photos %}
+                    <div class="admin-photo-card">
+                        <div class="admin-photo-thumb">
+                            <img src="{{ url_for('static', filename='uploads/' + photo.filename) }}" alt="">
+                        </div>
+                        <div class="admin-photo-info">
+                            <form method="POST" action="{{ url_for('admin_photo_caption', photo_id=photo.id) }}" class="caption-form">
+                                <input type="text" name="caption" value="{{ photo.caption }}"
+                                       placeholder="Adicionar legenda...">
+                                <button type="submit" class="btn btn-sm btn-info" title="Salvar legenda">
+                                    Salvar
+                                </button>
+                            </form>
+                            <div class="photo-actions">
+                                <form method="POST" action="{{ url_for('admin_photo_delete', photo_id=photo.id) }}"
+                                      class="inline-form"
+                                      onsubmit="return confirm('Excluir esta foto?')">
+                                    <button type="submit" class="btn btn-sm btn-danger" title="Excluir foto">
+                                        Excluir
+                                    </button>
+                                </form>
+                            </div>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        {% else %}
+            <div class="empty-state">
+                <h3>Nenhuma foto adicionada</h3>
+                <p>Envie fotos usando o formulário acima.</p>
+            </div>
+        {% endif %}
+    </div>
+</section>
+{% endblock %}
