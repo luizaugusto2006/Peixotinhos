@@ -30,7 +30,7 @@
         {% if photos %}
             <div class="gallery-grid" id="gallery">
                 {% for photo in photos %}
-                    <div class="gallery-item" onclick="openLightbox({{ loop.index0 }})">
+                    <div class="gallery-item scroll-reveal" onclick="openLightbox({{ loop.index0 }})">
                         <img src="{{ url_for('static', filename='uploads/' + photo.filename) }}"
                              alt="{{ photo.caption or event.title }}"
                              loading="lazy">
@@ -47,6 +47,7 @@
                 <button class="lightbox-next" onclick="navigateLightbox(1)">&rsaquo;</button>
                 <div class="lightbox-content">
                     <img id="lightbox-img" src="" alt="">
+                    <p id="lightbox-counter" class="lightbox-counter"></p>
                     <p id="lightbox-caption" class="lightbox-caption"></p>
                 </div>
             </div>
@@ -92,6 +93,7 @@
     function updateLightbox() {
         document.getElementById('lightbox-img').src = photos[currentIndex].src;
         document.getElementById('lightbox-caption').textContent = photos[currentIndex].caption;
+        document.getElementById('lightbox-counter').textContent = (currentIndex + 1) + ' de ' + photos.length;
     }
 
     document.addEventListener('keydown', function(e) {
@@ -100,5 +102,17 @@
         if (e.key === 'ArrowLeft') navigateLightbox(-1);
         if (e.key === 'ArrowRight') navigateLightbox(1);
     });
+
+    // Scroll reveal
+    function revealOnScroll() {
+        document.querySelectorAll('.scroll-reveal').forEach(function(el) {
+            var rect = el.getBoundingClientRect();
+            if (rect.top < window.innerHeight - 60) {
+                el.classList.add('revealed');
+            }
+        });
+    }
+    window.addEventListener('scroll', revealOnScroll);
+    window.addEventListener('load', revealOnScroll);
 </script>
 {% endblock %}

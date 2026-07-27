@@ -61,7 +61,12 @@ def create_app():
             .order_by(Event.date.desc())
             .all()
         )
-        return render_template("index.html", events=events)
+        years = sorted(set(e.date.year for e in events), reverse=True)
+        return render_template("index.html", events=events, years=years)
+
+    @app.route("/sobre")
+    def about():
+        return render_template("about.html")
 
     @app.route("/evento/<int:event_id>")
     def event_detail(event_id):
@@ -70,6 +75,10 @@ def create_app():
             abort(404)
         photos = Photo.query.filter_by(event_id=event.id).order_by(Photo.order, Photo.id).all()
         return render_template("event_detail.html", event=event, photos=photos)
+
+    @app.errorhandler(404)
+    def page_not_found(e):
+        return render_template("404.html"), 404
 
     # ── Auth routes ────────────────────────────────────────────
 

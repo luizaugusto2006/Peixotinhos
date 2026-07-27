@@ -5,17 +5,17 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>{% block title %}Peixotinhos{% endblock %} | Colégio Afrânio Peixoto</title>
 
-    <meta name="description" content="Galeria de fotos dos eventos do Colégio Afrânio Peixoto">
+    <meta name="description" content="Galeria de fotos dos eventos do Colégio Afrânio Peixoto - Nova Iguaçu, RJ">
     <meta name="author" content="Pintinho">
 
     <meta property="og:title" content="Peixotinhos - Colégio Afrânio Peixoto">
-    <meta property="og:description" content="Galeria de fotos dos eventos do Colégio Afrânio Peixoto">
+    <meta property="og:description" content="Galeria de fotos dos eventos do Colégio Afrânio Peixoto - Nova Iguaçu, RJ">
     <meta property="og:type" content="website">
     <meta property="og:image" content="{{ url_for('static', filename='uploads/fachada_com_sr_rui.jpg', _external=True) }}">
 
     <meta name="twitter:card" content="summary_large_image">
     <meta name="twitter:title" content="Peixotinhos - Colégio Afrânio Peixoto">
-    <meta name="twitter:description" content="Galeria de fotos dos eventos do Colégio Afrânio Peixoto">
+    <meta name="twitter:description" content="Galeria de fotos dos eventos do Colégio Afrânio Peixoto - Nova Iguaçu, RJ">
     <meta name="twitter:image" content="{{ url_for('static', filename='uploads/fachada_com_sr_rui.jpg', _external=True) }}">
 
     <link rel="icon" type="image/svg+xml" href="data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><text y='.9em' font-size='90'>🐟</text></svg>">
@@ -31,6 +31,7 @@
             </a>
             <div class="nav-links">
                 <a href="{{ url_for('index') }}">Início</a>
+                <a href="{{ url_for('about') }}">Sobre</a>
                 {% if current_user.is_authenticated %}
                     <a href="{{ url_for('admin_dashboard') }}">Painel</a>
                     {% if current_user.username.lower() in ('admin', 'luiz') %}
@@ -40,10 +41,18 @@
                 {% else %}
                     <a href="{{ url_for('login') }}" class="btn-nav btn-login">Admin</a>
                 {% endif %}
+                <button class="dark-toggle" id="darkToggle" onclick="toggleDark()" title="Modo escuro">
+                    <span id="darkIcon">&#9789;</span>
+                </button>
             </div>
-            <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">
-                Menu
-            </button>
+            <div style="display:flex;align-items:center;gap:12px;">
+                <button class="dark-toggle" id="darkToggleMobile" onclick="toggleDark()" title="Modo escuro">
+                    <span id="darkIconMobile">&#9789;</span>
+                </button>
+                <button class="nav-toggle" onclick="document.querySelector('.nav-links').classList.toggle('open')">
+                    Menu
+                </button>
+            </div>
         </div>
     </nav>
 
@@ -74,6 +83,29 @@
     <button class="back-to-top" id="backToTop" title="Voltar ao topo">&#8593;</button>
 
     <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+    <script>
+        // Dark mode
+        function toggleDark() {
+            document.body.classList.toggle('dark-mode');
+            var isDark = document.body.classList.contains('dark-mode');
+            localStorage.setItem('darkMode', isDark);
+            updateDarkIcon();
+        }
+
+        function updateDarkIcon() {
+            var isDark = document.body.classList.contains('dark-mode');
+            var icon = isDark ? '&#9788;' : '&#9789;';
+            var el1 = document.getElementById('darkIcon');
+            var el2 = document.getElementById('darkIconMobile');
+            if (el1) el1.innerHTML = icon;
+            if (el2) el2.innerHTML = icon;
+        }
+
+        if (localStorage.getItem('darkMode') === 'true') {
+            document.body.classList.add('dark-mode');
+        }
+        updateDarkIcon();
+    </script>
     {% block scripts %}{% endblock %}
 </body>
 </html>

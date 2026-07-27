@@ -16,13 +16,25 @@
     <div class="container">
         <h2 class="section-title">Nossos Eventos</h2>
 
+        <div class="search-box">
+            <input type="text" id="searchInput" placeholder="Buscar evento por nome..." oninput="filterEvents()">
+            <select id="yearFilter" onchange="filterEvents()">
+                <option value="">Todos os anos</option>
+                {% for year in years %}
+                    <option value="{{ year }}">{{ year }}</option>
+                {% endfor %}
+            </select>
+        </div>
+
         {% if events %}
-            <div class="events-grid">
+            <div class="events-grid" id="eventsGrid">
                 {% for event in events %}
-                    <a href="{{ url_for('event_detail', event_id=event.id) }}" class="event-card">
+                    <a href="{{ url_for('event_detail', event_id=event.id) }}" class="event-card scroll-reveal"
+                       data-title="{{ event.title | lower }}"
+                       data-year="{{ event.date.year }}">
                         <div class="event-cover">
                             {% if event.cover_photo %}
-                                <img src="{{ url_for('static', filename='uploads/' + event.cover_photo) }}" alt="{{ event.title }}">
+                                <img src="{{ url_for('static', filename='uploads/' + event.cover_photo) }}" alt="{{ event.title }}" loading="lazy">
                             {% else %}
                                 <div class="event-cover-placeholder">
                                     Foto
@@ -41,6 +53,11 @@
                     </a>
                 {% endfor %}
             </div>
+
+            <div id="noResults" class="empty-state" style="display:none;">
+                <h3>Nenhum evento encontrado</h3>
+                <p>Tente buscar com outros termos.</p>
+            </div>
         {% else %}
             <div class="empty-state">
                 <h3>Nenhum evento publicado</h3>
@@ -49,4 +66,53 @@
         {% endif %}
     </div>
 </section>
+
+<section class="section" style="background:var(--gray-100);">
+    <div class="container" style="text-align:center;">
+        <h2 class="section-title">Conheça nossa história</h2>
+        <p style="color:var(--gray-600);max-width:600px;margin:0 auto 24px;">
+            O Colégio Afrânio Peixoto marcou a vida de gerações de iguaçuanos desde a década de 1960.
+        </p>
+        <a href="{{ url_for('about') }}" class="btn btn-primary">Saiba Mais</a>
+    </div>
+</section>
+{% endblock %}
+
+{% block scripts %}
+<script>
+function filterEvents() {
+    var search = document.getElementById('searchInput').value.toLowerCase();
+    var year = document.getElementById('yearFilter').value;
+    var cards = document.querySelectorAll('.event-card');
+    var found = 0;
+
+    cards.forEach(function(card) {
+        var title = card.dataset.title;
+        var cardYear = card.dataset.year;
+        var matchSearch = !search || title.indexOf(search) !== -1;
+        var matchYear = !year || cardYear === year;
+
+        if (matchSearch && matchYear) {
+            card.style.display = '';
+            found++;
+        } else {
+            card.style.display = 'none';
+        }
+    });
+
+    document.getElementById('noResults').style.display = found === 0 ? '' : 'none';
+}
+
+// Scroll reveal
+function revealOnScroll() {
+    document.querySelectorAll('.scroll-reveal').forEach(function(el) {
+        var rect = el.getBoundingClientRect();
+        if (rect.top < window.innerHeight - 60) {
+            el.classList.add('revealed');
+        }
+    });
+}
+window.addEventListener('scroll', revealOnScroll);
+window.addEventListener('load', revealOnScroll);
+</script>
 {% endblock %}

@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Página não encontrada | Peixotinhos</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+</head>
+<body>
+    <main>
+        <section class="section" style="min-height:70vh;display:flex;align-items:center;">
+            <div class="container" style="text-align:center;">
+                <div style="font-size:8rem;font-weight:800;color:var(--primary);line-height:1;opacity:0.15;">404</div>
+                <h1 style="font-size:2rem;margin:16px 0 8px;">Página não encontrada</h1>
+                <p style="color:var(--gray-600);margin-bottom:32px;">O endereço que você procura não existe ou foi movido.</p>
+                <a href="{{ url_for('index') }}" class="btn btn-primary">Voltar ao Início</a>
+            </div>
+        </section>
+    </main>
+</body>
+</html>
